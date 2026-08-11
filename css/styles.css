@@ -31,13 +31,13 @@
   /* Small-type scale. --fs-xs is the floor: nothing on the site sets a
      font-size below it. Anything that wants to feel "small" uses these two
      tokens rather than inventing its own value. */
-  --fs-xs: 0.875rem;   /* 14px — labels, captions, fine print */
-  --fs-sm: 0.9375rem;  /* 15px — meta text */
-  --fs-md: 1rem;       /* 16px — default body */
+  --fs-xs: 0.875rem;   /* 14px - labels, captions, fine print */
+  --fs-sm: 0.9375rem;  /* 15px - meta text */
+  --fs-md: 1rem;       /* 16px - default body */
 
   /* Big Shoulders Display is heavily condensed, so it reads ~3px smaller than
-     Inter at the same px value. Anything set in the display font at UI scale —
-     nav, buttons, eyebrows — uses this instead of the tokens above. */
+     Inter at the same px value. Anything set in the display font at UI scale -
+     nav, buttons, eyebrows - uses this instead of the tokens above. */
   --fs-ui: 1.125rem;   /* 18px condensed ≈ 15px body text optically */
 
   /* ---- Layout ---- */
@@ -141,7 +141,7 @@ p.lede {
 }
 
 /* ---------------------------------------------------------------------
-   Header — full black background matches the logo's own background colour
+   Header - full black background matches the logo's own background colour
    --------------------------------------------------------------------- */
 .site-header {
   position: sticky;
@@ -165,7 +165,7 @@ p.lede {
 
 /* ---- Brand ----
    The logo file is landscape (~1.25:1) and carries the company name, so it is
-   sized by HEIGHT and given no adjacent text — a fixed square box would letterbox
+   sized by HEIGHT and given no adjacent text - a fixed square box would letterbox
    it and shrink the wordmark until it was unreadable. */
 .brand {
   display: flex;
@@ -183,12 +183,12 @@ p.lede {
   transition: height 0.18s ease;
 }
 
-/* The header collapses once the page is scrolled, at every width — the logo is
+/* The header collapses once the page is scrolled, at every width - the logo is
    sized to be legible at rest, not to be carried down the whole page. */
 .site-header.is-scrolled .site-header__bar { height: 84px; }
 .site-header.is-scrolled .brand__mark      { height: 64px; }
 
-/* ---- Nav toggle — white on black ---- */
+/* ---- Nav toggle - white on black ---- */
 .nav-toggle {
   display: inline-flex;
   align-items: center;
@@ -222,7 +222,7 @@ p.lede {
 .nav-toggle span::before { top: -6px; }
 .nav-toggle span::after  { top:  6px; }
 
-/* ---- Nav — mobile: stacked dropdown on dark background ---- */
+/* ---- Nav - mobile: stacked dropdown on dark background ---- */
 .site-nav {
   display: none;
   background: #111111;
@@ -255,7 +255,7 @@ p.lede {
 .site-nav__list a[aria-current="page"] { color: var(--electric); }
 .site-nav__list a:hover              { color: #fff; }
 
-/* ---- CTAs — hidden until desktop ---- */
+/* ---- CTAs - hidden until desktop ---- */
 .header-cta { display: none; }
 
 /* ---- Desktop layout ----
@@ -291,7 +291,7 @@ p.lede {
   .site-nav__list a {
     border-bottom: none;
     padding: 8px 9px;
-    /* no font-size here — inherits the 1.25rem set on the base rule */
+    /* no font-size here - inherits the 1.25rem set on the base rule */
     white-space: nowrap;
     border-radius: 5px;
     color: rgba(255,255,255,0.78);
@@ -409,7 +409,7 @@ p.lede {
 /* Breaker illustration (SVG lives inline in markup, styled here) */
 .breaker-art { justify-self: center; width: 100%; max-width: 340px; }
 
-/* Each switch is a real link with a real label — the artwork alone gave no clue
+/* Each switch is a real link with a real label - the artwork alone gave no clue
    it was clickable. */
 .breaker-art__title {
   font-family: var(--font-display);
@@ -447,7 +447,7 @@ p.lede {
   border-bottom: 1px solid var(--line);
   padding: 28px 0 32px;
 }
-/* Label sits on its own line above the marks — side by side they read as one
+/* Label sits on its own line above the marks - side by side they read as one
    run-on line and the label gets lost against the logos. */
 .accred-strip__inner {
   display: flex;
@@ -511,7 +511,7 @@ p.lede {
 .accred-item--link:hover .accred-logo            { opacity: 1; }
 
 /* One shared height. This only works because the source files are cropped tight
-   to their artwork — the originals carried transparent padding (MyJobQuote's mark
+   to their artwork - the originals carried transparent padding (MyJobQuote's mark
    filled just 31% of its canvas height, NAPIT's 97%), so an equal CSS height gave
    wildly unequal visible logos. Don't drop an untrimmed file in here. */
 .accred-logo {
