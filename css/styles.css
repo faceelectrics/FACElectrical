@@ -1,0 +1,985 @@
+/* =====================================================================
+   FAC Electrical - stylesheet
+   Design language: consumer-unit / breaker-panel, drawn from the trade
+   itself rather than generic web defaults.
+   ===================================================================== */
+
+:root {
+  /* ---- Colour tokens ---- */
+  --ink:            #1B1F23;   /* consumer-unit casing charcoal */
+  --ink-soft:       #4B5157;   /* secondary text */
+  --paper:          #F2F3F0;   /* cool off-white background */
+  --panel:          #FFFFFF;   /* card / panel surface */
+  --line:           #DDE0DB;   /* hairline borders */
+
+  --accent:         #F2B90C;   /* hazard-label amber - the brand switch */
+  --accent-ink:     #2B2200;   /* text on amber */
+
+  --fire:           #C6362A;   /* fire alarms */
+  --fire-dark:      #8f2620;
+  --camera:         #2A5A73;   /* CCTV / cameras */
+  --camera-dark:    #1d4055;
+  --electric:       #2E7D46;   /* domestic electrics - earth-wire green */
+  --electric-dark:  #1f5c32;
+  --intruder:       #3B4B8C;   /* intruder alarms / access control */
+  --intruder-dark:  #2A3570;
+
+  /* ---- Type ---- */
+  --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  /* Small-type scale. --fs-xs is the floor: nothing on the site sets a
+     font-size below it. Anything that wants to feel "small" uses these two
+     tokens rather than inventing its own value. */
+  --fs-xs: 0.875rem;   /* 14px — labels, captions, fine print */
+  --fs-sm: 0.9375rem;  /* 15px — meta text */
+  --fs-md: 1rem;       /* 16px — default body */
+
+  /* Big Shoulders Display is heavily condensed, so it reads ~3px smaller than
+     Inter at the same px value. Anything set in the display font at UI scale —
+     nav, buttons, eyebrows — uses this instead of the tokens above. */
+  --fs-ui: 1.125rem;   /* 18px condensed ≈ 15px body text optically */
+
+  /* ---- Layout ---- */
+  --max-width: 1120px;
+  --radius: 10px;
+  --gutter: 20px;
+}
+
+/* ---------------------------------------------------------------------
+   Reset & base
+   --------------------------------------------------------------------- */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body, h1, h2, h3, p, ul, figure { margin: 0; }
+img { max-width: 100%; display: block; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: none; }
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Room at the bottom on mobile for the sticky contact bar */
+body { padding-bottom: 74px; }
+@media (min-width: 800px) {
+  body { padding-bottom: 0; }
+}
+
+h1, h2, h3, .display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  color: var(--ink);
+}
+
+h1 { font-size: clamp(2.1rem, 8vw, 3.6rem); font-weight: 800; }
+h2 { font-size: clamp(1.6rem, 5vw, 2.3rem); }
+h3 { font-size: 1.15rem; letter-spacing: 0.02em; }
+
+p.lede {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  max-width: 640px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--camera);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding: 48px 0;
+}
+@media (min-width: 800px) {
+  .section { padding: 76px 0; }
+}
+
+.section--tight { padding: 32px 0; }
+
+.section--dark {
+  background: var(--ink);
+  color: var(--paper);
+}
+.section--dark h1, .section--dark h2, .section--dark h3 { color: var(--paper); }
+.section--dark p.lede { color: #C7CBC5; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 3px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+/* ---------------------------------------------------------------------
+   Header — full black background matches the logo's own background colour
+   --------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: #000000;
+  border-bottom: 3px solid var(--electric);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+}
+
+.site-header__bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 var(--gutter);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  height: 128px;
+  transition: height 0.18s ease;
+}
+
+/* ---- Brand ----
+   The logo file is landscape (~1.25:1) and carries the company name, so it is
+   sized by HEIGHT and given no adjacent text — a fixed square box would letterbox
+   it and shrink the wordmark until it was unreadable. */
+.brand {
+  display: flex;
+  align-items: center;
+  flex: none;
+  color: #fff;
+  text-decoration: none;
+}
+
+.brand__mark {
+  flex: none;
+  height: 104px;
+  width: auto;
+  display: block;
+  transition: height 0.18s ease;
+}
+
+/* The header collapses once the page is scrolled, at every width — the logo is
+   sized to be legible at rest, not to be carried down the whole page. */
+.site-header.is-scrolled .site-header__bar { height: 84px; }
+.site-header.is-scrolled .brand__mark      { height: 64px; }
+
+/* ---- Nav toggle — white on black ---- */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin-left: auto;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.5);
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  flex: none;
+}
+.nav-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+}
+.nav-toggle span::before,
+.nav-toggle span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+}
+.nav-toggle span::before { top: -6px; }
+.nav-toggle span::after  { top:  6px; }
+
+/* ---- Nav — mobile: stacked dropdown on dark background ---- */
+.site-nav {
+  display: none;
+  background: #111111;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+.site-nav.is-open { display: block; }
+
+.site-nav__list {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 8px var(--gutter) 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-nav__list a {
+  display: block;
+  padding: 12px 4px;
+  color: rgba(255,255,255,0.82);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  /* Larger than --fs-ui: the nav is the primary wayfinding on the page, and
+     unlike the buttons it has no fill or border to give it presence. */
+  font-size: 1.25rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.site-nav__list li:last-child a { border-bottom: none; }
+.site-nav__list a[aria-current="page"] { color: var(--electric); }
+.site-nav__list a:hover              { color: #fff; }
+
+/* ---- CTAs — hidden until desktop ---- */
+.header-cta { display: none; }
+
+/* ---- Desktop layout ----
+   Two steps rather than one. The horizontal nav row only turns on at 1024px, and
+   the logo only reaches full size at 1200px where there is room for the logo,
+   six nav items and both CTAs on one line without them closing on each other. */
+@media (min-width: 1024px) {
+  .site-header__bar { height: 156px; }
+  .brand__mark      { height: 128px; }
+
+  .site-header.is-scrolled .site-header__bar { height: 104px; }
+  .site-header.is-scrolled .brand__mark      { height: 82px; }
+
+  .nav-toggle { display: none; }
+
+  .site-nav {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    border-top: none;
+  }
+
+  .site-nav__list {
+    flex-direction: row;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    gap: 2px;
+  }
+
+  .site-nav__list a {
+    border-bottom: none;
+    padding: 8px 9px;
+    /* no font-size here — inherits the 1.25rem set on the base rule */
+    white-space: nowrap;
+    border-radius: 5px;
+    color: rgba(255,255,255,0.78);
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .site-nav__list a:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+  }
+  .site-nav__list a[aria-current="page"] {
+    color: var(--electric);
+    background: rgba(46,125,70,0.18);
+  }
+
+  .header-cta { display: flex; gap: 8px; flex: none; align-items: center; }
+}
+
+@media (min-width: 1200px) {
+  .site-header__bar   { height: 176px; }
+  .brand__mark        { height: 148px; }
+  .site-nav__list a   { padding: 8px 12px; }
+}
+
+/* ---------------------------------------------------------------------
+   Buttons
+   --------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: var(--fs-ui);
+  padding: 13px 20px;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn--amber {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.btn--amber:hover { background: #ffd23d; }
+
+.btn--outline {
+  background: transparent;
+  border-color: var(--paper);
+  color: var(--paper);
+}
+.btn--outline:hover { background: rgba(255,255,255,0.08); }
+
+.btn--outline-dark {
+  background: transparent;
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.btn--outline-dark:hover { background: rgba(0,0,0,0.05); }
+
+.btn--sm {
+  padding: 8px 14px;
+  font-size: var(--fs-ui);
+  border-radius: 6px;
+}
+
+.btn--block { width: 100%; }
+
+.header-cta .btn { padding: 10px 16px; }
+
+/* ---------------------------------------------------------------------
+   Hero
+   --------------------------------------------------------------------- */
+.hero {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 44px 0 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  right: -60px;
+  bottom: -60px;
+  width: 260px;
+  height: 260px;
+  background: radial-gradient(circle, rgba(242,185,12,0.16), transparent 70%);
+}
+
+.hero__grid {
+  display: grid;
+  gap: 28px;
+}
+
+.hero h1 { color: var(--paper); }
+.hero .lede { color: #C7CBC5; margin-top: 14px; font-size: 1.05rem; max-width: 560px; }
+
+.hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+@media (min-width: 900px) {
+  .hero { padding: 72px 0 68px; }
+  .hero__grid { grid-template-columns: 1.1fr 0.9fr; align-items: center; }
+}
+
+/* Breaker illustration (SVG lives inline in markup, styled here) */
+.breaker-art { justify-self: center; width: 100%; max-width: 340px; }
+
+/* Each switch is a real link with a real label — the artwork alone gave no clue
+   it was clickable. */
+.breaker-art__title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  fill: #7E858B;
+}
+.breaker-art__row { cursor: pointer; }
+.breaker-art__body,
+.breaker-art__chev { transition: fill 0.15s ease, stroke 0.15s ease, transform 0.15s ease; }
+.breaker-art__name {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  fill: #EEF0F2;
+}
+.breaker-art__row:hover .breaker-art__body { fill: #3B434B; }
+.breaker-art__row:hover .breaker-art__chev { stroke: #fff; transform: translateX(3px); }
+.breaker-art__row:active .breaker-art__body { fill: #2D343B; }
+.breaker-art__row:focus-visible { outline: none; }
+.breaker-art__row:focus-visible .breaker-art__body {
+  stroke: var(--amber, #E8A33D);
+  stroke-width: 2;
+}
+
+/* ---------------------------------------------------------------------
+   Accreditation strip
+   --------------------------------------------------------------------- */
+.accred-strip {
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding: 28px 0 32px;
+}
+/* Label sits on its own line above the marks — side by side they read as one
+   run-on line and the label gets lost against the logos. */
+.accred-strip__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.accred-strip__label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.accred-strip__label::before,
+.accred-strip__label::after {
+  content: "";
+  width: 34px;
+  height: 1px;
+  background: var(--line);
+}
+.accred-logos {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 28px 48px;
+  flex-wrap: wrap;
+}
+
+/* Logo + caption. Every mark gets one so the linked mark isn't the odd one out. */
+.accred-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+.accred-item__note {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.accred-item__note svg {
+  width: 13px;
+  height: 13px;
+  transition: transform 0.15s ease;
+}
+
+/* The only differences on the linked mark: an arrow, and it responds to hover. */
+.accred-item--link:hover .accred-item__note      { color: var(--ink); text-decoration: underline; }
+.accred-item--link:hover .accred-item__note svg  { transform: translateX(3px); }
+.accred-item--link:hover .accred-logo            { opacity: 1; }
+
+/* One shared height. This only works because the source files are cropped tight
+   to their artwork — the originals carried transparent padding (MyJobQuote's mark
+   filled just 31% of its canvas height, NAPIT's 97%), so an equal CSS height gave
+   wildly unequal visible logos. Don't drop an untrimmed file in here. */
+.accred-logo {
+  height: 56px;
+  width: auto;
+  opacity: 0.9;
+  transition: opacity 0.15s ease;
+}
+.accred-logo:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+  .accred-logo { height: 40px; }
+}
+
+/* ---------------------------------------------------------------------
+   Breaker-panel service cards - signature component
+   --------------------------------------------------------------------- */
+.panel-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 34px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 640px) {
+  .panel-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1000px) {
+  .panel-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.breaker {
+  display: block;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 20px 22px;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.breaker:hover, .breaker:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px -14px rgba(0,0,0,0.35);
+}
+
+.breaker__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.breaker__label {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.breaker__switch {
+  flex: none;
+  width: 46px;
+  height: 26px;
+  border-radius: 4px;
+  background: var(--ink);
+  position: relative;
+  border: 2px solid var(--ink);
+}
+.breaker__switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.breaker--fire .breaker__switch::after { background: var(--fire); }
+.breaker--camera .breaker__switch::after { background: var(--camera); }
+.breaker--electric .breaker__switch::after { background: var(--electric); }
+
+.breaker__desc {
+  margin-top: 12px;
+  color: var(--ink-soft);
+  font-size: var(--fs-md);
+}
+
+.breaker__go {
+  margin-top: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+}
+.breaker__go svg { width: 14px; height: 14px; }
+
+.breaker--fire .breaker__go { color: var(--fire-dark); }
+.breaker--camera .breaker__go { color: var(--camera-dark); }
+.breaker--electric .breaker__go { color: var(--electric-dark); }
+.breaker--intruder .breaker__switch::after { background: var(--intruder); }
+.breaker--intruder .breaker__go { color: var(--intruder-dark); }
+.breaker--intruder::before { background: var(--intruder); }
+
+/* Coloured top rail per service, echoes cable-core colours */
+.breaker::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 16px; right: 16px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 0 0 3px 3px;
+}
+.breaker--fire::before { background: var(--fire); }
+.breaker--camera::before { background: var(--camera); }
+.breaker--electric::before { background: var(--electric); }
+
+/* ---------------------------------------------------------------------
+   Mini switch bullets - used as list markers throughout
+   --------------------------------------------------------------------- */
+.switch-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+.switch-list li:last-child { border-bottom: none; }
+.switch-list .tick {
+  flex: none;
+  width: 22px;
+  height: 14px;
+  margin-top: 3px;
+  border-radius: 3px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  position: relative;
+}
+.switch-list .tick::after {
+  content: "";
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 6px; height: 6px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+.switch-list--fire .tick::after { background: var(--fire); }
+.switch-list--camera .tick::after { background: var(--camera); }
+.switch-list--electric .tick::after { background: var(--electric); }
+.switch-list--intruder .tick::after { background: var(--intruder); }
+
+/* ---------------------------------------------------------------------
+   Service sections (domestic / non-domestic split layout)
+   --------------------------------------------------------------------- */
+.service-sections {
+  display: grid;
+  gap: 32px;
+}
+@media (min-width: 700px) {
+  .service-sections { grid-template-columns: 1fr 1fr; }
+}
+
+.service-section__heading {
+  font-size: var(--fs-sm);
+  letter-spacing: 0.1em;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 0;
+  color: var(--ink-soft);
+}
+.service-section__heading--electric { border-color: var(--electric); color: var(--electric-dark); }
+.service-section__heading--fire     { border-color: var(--fire);     color: var(--fire-dark); }
+.service-section__heading--camera   { border-color: var(--camera);   color: var(--camera-dark); }
+.service-section__heading--intruder { border-color: var(--intruder); color: var(--intruder-dark); }
+
+/* ---------------------------------------------------------------------
+   Trust strip / about blurb
+   --------------------------------------------------------------------- */
+.trust {
+  display: grid;
+  gap: 28px;
+  align-items: start;
+}
+@media (min-width: 800px) {
+  .trust { grid-template-columns: 1fr 1fr; }
+}
+.trust__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+.trust__stat {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  background: var(--panel);
+}
+.trust__stat b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--ink);
+}
+.trust__stat span {
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------------
+   Page banner (service pages)
+   --------------------------------------------------------------------- */
+.page-banner {
+  padding: 40px 0 34px;
+  color: var(--paper);
+}
+.page-banner .eyebrow { color: rgba(255,255,255,0.7); }
+.page-banner .eyebrow::before { background: var(--accent); }
+.page-banner h1 { color: var(--paper); margin-top: 8px; }
+.page-banner p.lede { color: rgba(255,255,255,0.82); margin-top: 12px; }
+
+.page-banner--fire     { background: linear-gradient(155deg, var(--fire-dark),     var(--ink) 75%); }
+.page-banner--camera   { background: linear-gradient(155deg, var(--camera-dark),   var(--ink) 75%); }
+.page-banner--electric { background: linear-gradient(155deg, var(--electric-dark), var(--ink) 75%); }
+.page-banner--intruder { background: linear-gradient(155deg, var(--intruder-dark), var(--ink) 75%); }
+.page-banner--plain    { background: var(--ink); }
+
+/* ---------------------------------------------------------------------
+   Content blocks
+   --------------------------------------------------------------------- */
+.cols-2 {
+  display: grid;
+  gap: 28px;
+}
+@media (min-width: 800px) {
+  .cols-2 { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+
+.prose h2 { margin-top: 4px; }
+.prose p {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  max-width: 640px;
+  margin-top: 14px;
+}
+.prose p:first-of-type { margin-top: 14px; }
+
+.callout {
+  border-left: 4px solid var(--accent);
+  background: #FFF7DF;
+  padding: 16px 18px;
+  border-radius: 0 8px 8px 0;
+  font-size: var(--fs-md);
+  color: #4a3c07;
+}
+
+/* ---------------------------------------------------------------------
+   Certifications
+   --------------------------------------------------------------------- */
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 24px;
+}
+@media (min-width: 700px) {
+  .certs-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.cert-badge {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  padding: 18px 14px;
+  text-align: center;
+}
+.cert-badge__mark {
+  width: 40px; height: 40px;
+  margin: 0 auto 10px;
+  border-radius: 50%;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+.cert-badge__img {
+  width: 70px;
+  height: 60px;
+  margin: 0 auto 10px;
+  object-fit: contain;
+  display: block;
+}
+.cert-badge__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-ui);
+  letter-spacing: 0.01em;
+}
+.cert-badge__note {
+  font-size: var(--fs-xs);
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.certs-note {
+  margin-top: 16px;
+  font-size: var(--fs-sm);
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------------
+   Contact block (shared: reused on every page footer area + contact section)
+   --------------------------------------------------------------------- */
+.contact-block {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius);
+  padding: 26px;
+}
+.contact-block h2, .contact-block h3 { color: var(--paper); }
+.contact-block--bare { background: transparent; border: 1px solid #33393F; padding: 0; }
+
+.contact-methods {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+@media (min-width: 640px) {
+  .contact-methods { grid-template-columns: 1fr 1fr; }
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.contact-row__text {
+  min-width: 0;
+}
+.contact-row__label {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.contact-row__value {
+  font-size: var(--fs-md);
+  word-break: break-word;
+}
+.copy-btn {
+  flex: none;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: var(--paper);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: var(--fs-xs);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+.copy-btn:hover { background: rgba(255,255,255,0.12); }
+.copy-btn[data-copied="true"] { background: var(--electric); border-color: var(--electric); color: #fff; }
+
+/* ---------------------------------------------------------------------
+   Footer
+   --------------------------------------------------------------------- */
+.site-footer {
+  background: var(--ink);
+  color: #C7CBC5;
+  padding: 40px 0 26px;
+  font-size: var(--fs-sm);
+}
+.footer-grid {
+  display: grid;
+  gap: 26px;
+}
+@media (min-width: 800px) {
+  .footer-grid { grid-template-columns: 1.2fr 1fr 1fr; }
+}
+.footer-heading {
+  font-family: var(--font-display);
+  color: var(--paper);
+  font-size: var(--fs-ui);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.footer-company p { margin-bottom: 4px; }
+.footer-links a {
+  display: block;
+  padding: 5px 0;
+  color: #C7CBC5;
+}
+.footer-links a:hover { color: var(--accent); }
+.footer-bottom {
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid #2c3238;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: #808781;
+}
+
+/* ---------------------------------------------------------------------
+   Sticky mobile contact bar
+   --------------------------------------------------------------------- */
+.mobile-bar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--ink);
+  border-top: 3px solid var(--accent);
+}
+.mobile-bar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 8px;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: var(--fs-ui);
+  color: var(--paper);
+}
+.mobile-bar a:first-child {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.mobile-bar svg { width: 18px; height: 18px; }
+
+@media (min-width: 800px) {
+  .mobile-bar { display: none; }
+}
+
+/* ---------------------------------------------------------------------
+   Utility
+   --------------------------------------------------------------------- */
+.mt-0 { margin-top: 0; }
+.mt-sm { margin-top: 10px; }
+.mt-md { margin-top: 20px; }
+.mt-lg { margin-top: 36px; }
+.text-soft { color: var(--ink-soft); }
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
